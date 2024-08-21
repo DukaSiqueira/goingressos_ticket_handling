@@ -1,10 +1,13 @@
 package config
 
 import (
+	"goingressos_ticket_handling/utils"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 type Config struct {
@@ -15,19 +18,23 @@ type Config struct {
 	DBName     string
 }
 
-func LoadConfig() (*Config, error) {
+var DB *gorm.DB
+
+func LoadConfig() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("Arquivo .env não encontrado, carregando variáveis do ambiente")
+		log.Fatalf("Erro ao carregar o arquivo .env: %v", err)
 	}
 
-	cfg := &Config{
-		DBUser:     os.Getenv("DB_USERNAME"),
-		DBPassword: os.Getenv("DB_PASSWORD"),
-		DBHost:     os.Getenv("DB_HOST"),
-		DBPort:     os.Getenv("DB_PORT"),
-		DBName:     os.Getenv("DB_DATABASE"),
+	logger := utils.NewLogger()
+
+	dsn := os.Getenv("DB_USERNAME") + ":" + os.Getenv("DB_PASSWORD") + "@tcp(" + os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT") + ")/" + os.Getenv("DB_DATABASE") + "?charset=utf8mb4&parseTime=True&loc=Local"
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		logger.Fatal("Erro ao conectar no banco de dados:", err)
 	}
 
-	return cfg, nil
+	DB = db
+	logger.Info("Banco de dados conectado com sucesso.")
 }

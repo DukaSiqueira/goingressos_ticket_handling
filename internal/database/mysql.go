@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// Connect abre uma conexão com o banco de dados usando GORM
 func Connect(cfg *config.Config) (*gorm.DB, error) {
 	dsn := cfg.DBUser + ":" + cfg.DBPassword + "@tcp(" + cfg.DBHost + ":" + cfg.DBPort + ")/" + cfg.DBName + "?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

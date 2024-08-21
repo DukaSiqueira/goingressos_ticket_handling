@@ -1,11 +1,8 @@
 package main
 
 import (
-	"os"
-	"os/signal"
-	"syscall"
-
 	"goingressos_ticket_handling/config"
+	"goingressos_ticket_handling/internal/database"
 	"goingressos_ticket_handling/internal/tickets"
 	"goingressos_ticket_handling/pkg/logger"
 )
@@ -13,16 +10,24 @@ import (
 func main() {
 	logger := logger.NewLogger()
 
+	// Carregar as configurações
 	cfg, err := config.LoadConfig()
 	if err != nil {
-		logger.Fatal("Erro ao carregar configurações:", err)
+		logger.Fatal("Erro ao carregar as configurações:", err)
 	}
-	logger.Info("Iniciando serviço de devolução de ingressos...")
-	tickets.StartTicketHandler(cfg, logger)
 
-	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
+	// Conectar ao banco de dados
+	db, err := database.Connect(cfg)
+	if err != nil {
+		logger.Fatal("Erro ao conectar ao banco de dados:", err)
+	}
 
-	<-stop
-	logger.Info("Encerrando serviço...")
+	// Processar devoluções de ingressos
+	tickets.ProcessTicketRefunds(db)
+
+	// Exemplo de loop para execução contínua
+	// for {
+	//     tickets.ProcessTicketRefunds(db)
+	//     time.Sleep(5 * time.Minute)
+	// }
 }

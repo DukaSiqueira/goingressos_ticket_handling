@@ -1,24 +1,19 @@
 package database
 
 import (
-	"database/sql"
-	"fmt"
+	"goingressos_ticket_handling/config"
 	"log"
 
-	"goingressos_ticket_handling/config"
-
-	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
-func Connect(cfg *config.Config) (*sql.DB, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
-	db, err := sql.Open("mysql", dsn)
+// Connect abre uma conexão com o banco de dados usando GORM
+func Connect(cfg *config.Config) (*gorm.DB, error) {
+	dsn := cfg.DBUser + ":" + cfg.DBPassword + "@tcp(" + cfg.DBHost + ":" + cfg.DBPort + ")/" + cfg.DBName + "?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Erro ao conectar ao banco de dados:", err)
-	}
-
-	if err = db.Ping(); err != nil {
-		return nil, err
+		log.Fatal("Falha ao conectar ao banco de dados:", err)
 	}
 
 	return db, nil

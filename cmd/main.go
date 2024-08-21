@@ -12,19 +12,15 @@ func main() {
 
 	config.LoadConfig()
 
-	ticker := time.NewTicker(3 * time.Hour)
-	defer ticker.Stop()
+	for {
+		logger.Info("Iniciando processo de verificação de status e integridade.")
+		err := services.RunStatusAndIntegrityCheck()
+		if err != nil {
+			logger.Fatal("Erro ao executar a verificação: ", err)
+		} else {
+			logger.Info("Verificação de status e integridade concluída.")
+		}
 
-	// for {
-	// 	select {
-	// 	case <-ticker.C:
-	logger.Info("Iniciando verificação de status e integridade.")
-	err := services.RunStatusCheck()
-	if err != nil {
-		logger.Fatal("Erro ao verificar status e integridade:", err)
-	} else {
-		logger.Info("Verificação de status e integridade concluída.")
+		time.Sleep(30 * time.Second)
 	}
-	// 	}
-	// }
 }

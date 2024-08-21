@@ -1,15 +1,12 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
 type Ticket struct {
 	gorm.Model
-	CompID  uint64
-	EventID uint64
-	Name    string
-	Sold    int
-	Price   float64
-	Status  int
+	CompID  uint64  `gorm:"column:compId"`
+	EventID uint64  `gorm:"column:eventId"`
+	Sold    int     `gorm:"column:sold"`
+	Price   float64 `gorm:"column:price"`
+	Status  int     `gorm:"column:status"`
 }

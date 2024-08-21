@@ -1,15 +1,18 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
 type TicketRecord struct {
 	gorm.Model
-	TicketID uint64 `gorm:"column:ticketId"`
-	EventID  uint64 `gorm:"column:eventId"`
-	Status   int
-	Price    float64
-	BuyID    uint64 `gorm:"column:buyId"`
-	Buy      Buy    `gorm:"foreignKey:BuyID"`
+	CompID      uint64 `gorm:"column:compId"`
+	TicketID    uint64 `gorm:"column:ticketId"`
+	EventID     uint64 `gorm:"column:eventId"`
+	TicketBuyID uint64 `gorm:"column:ticketBuyId"`
+	BatchID     uint64 `gorm:"column:batchId"`
+	Status      int
+	Price       float64
+}
+
+func (TicketRecord) TableName() string {
+	return "tickets_records"
 }

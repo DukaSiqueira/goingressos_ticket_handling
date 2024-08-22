@@ -23,7 +23,7 @@ func UpdateRecordsAndTicketsForBuy(buy models.Buy) error {
 
 	for _, record := range ticketRecords {
 		logger.Info("Atualizando TicketRecord ID:", record.ID, "com status:", buy.Status)
-
+		
 		record.Status = buy.Status
 		err := config.DB.Save(&record).Error
 		if err != nil {
@@ -34,7 +34,7 @@ func UpdateRecordsAndTicketsForBuy(buy models.Buy) error {
 		logger.Info("TicketRecord ID:", record.ID, "atualizado com sucesso.")
 	}
 
-	err := UpdateTicketSoldCount(buy.EventID, ticketRecords[0].BatchID)
+	err := UpdateTicketSoldCount(buy.EventID, ticketRecords[0].TicketID)
 	if err != nil {
 		logger.Fatal("Erro ao atualizar o campo 'sold' para o evento:", buy.EventID, err)
 		return err

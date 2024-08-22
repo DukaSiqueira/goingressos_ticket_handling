@@ -11,6 +11,7 @@ type TicketRecord struct {
 	BatchID     uint64 `gorm:"column:batchId"`
 	Status      int
 	Price       float64
+	DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
 
 func (TicketRecord) TableName() string {

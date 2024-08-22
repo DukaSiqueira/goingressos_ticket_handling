@@ -12,4 +12,5 @@ type Buy struct {
 	Price      float64
 	Quantity   int
 	Hash       string
+	DeletedAt  gorm.DeletedAt `gorm:"index"`
 }

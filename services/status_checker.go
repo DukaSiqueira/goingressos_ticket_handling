@@ -16,6 +16,7 @@ func RunStatusAndIntegrityCheck() error {
 
 	if buy == nil {
 		logger.Info("Nenhuma compra restante para processar.")
+		return nil
 	}
 
 	logger.Info("Processando compra ID:", buy.ID, "Status:", buy.Status, "EventID:", buy.EventID)

@@ -23,7 +23,7 @@ func UpdateRecordsAndTicketsForBuy(buy models.Buy) error {
 
 	for _, record := range ticketRecords {
 		logger.Info("Atualizando TicketRecord ID:", record.ID, "com status:", buy.Status)
-		
+
 		record.Status = buy.Status
 		err := config.DB.Save(&record).Error
 		if err != nil {
@@ -37,6 +37,18 @@ func UpdateRecordsAndTicketsForBuy(buy models.Buy) error {
 	err := UpdateTicketSoldCount(buy.EventID, ticketRecords[0].TicketID)
 	if err != nil {
 		logger.Fatal("Erro ao atualizar o campo 'sold' para o evento:", buy.EventID, err)
+		return err
+	}
+
+	err = config.DB.Delete(&ticketRecords).Error
+	if err != nil {
+		logger.Fatal("Erro ao realizar soft delete nos TicketRecords para Buy ID:", buy.ID, err)
+		return err
+	}
+
+	err = config.DB.Delete(&buy).Error
+	if err != nil {
+		logger.Fatal("Erro ao realizar soft delete em Buy ID:", buy.ID, err)
 		return err
 	}
 

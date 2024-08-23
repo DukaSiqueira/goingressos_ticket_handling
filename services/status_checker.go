@@ -28,6 +28,5 @@ func RunStatusAndIntegrityCheck() error {
 	}
 
 	logger.Info("Compra ID:", buy.ID, "processada com sucesso.")
-	logger.Info("Verificação de status e integridade realizada com sucesso.")
 	return nil
 }

@@ -12,7 +12,6 @@ func FetchNextBuyByStatus() (*models.Buy, error) {
 
 	result := config.DB.
 		Where("status IN ?", statusList).
-		Where("eventId = ?", 2432).
 		Where("created_at < ?", time.Now().Add(-3*time.Hour)).
 		Order("created_at ASC").
 		First(&buy)

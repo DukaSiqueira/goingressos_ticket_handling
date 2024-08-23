@@ -21,6 +21,6 @@ func main() {
 			logger.Info("Verificação de status e integridade concluída.")
 		}
 
-		time.Sleep(30 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 }

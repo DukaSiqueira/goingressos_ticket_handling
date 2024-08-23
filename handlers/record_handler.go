@@ -19,6 +19,16 @@ func UpdateRecordsAndTicketsForBuy(buy models.Buy) error {
 		return result.Error
 	}
 
+	if len(ticketRecords) == 0 {
+		err := config.DB.Delete(&buy).Error
+		if err != nil {
+			logger.Fatal("Erro ao realizar soft delete em Buy ID:", buy.ID, err)
+			return err
+		}
+		logger.Info("Sem registros de tickets para Buy ID:", buy.ID)
+		return nil
+	}
+
 	logger.Info("Encontrados", len(ticketRecords), "registros de tickets para Buy ID:", buy.ID)
 
 	for _, record := range ticketRecords {
